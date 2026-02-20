@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erick | Portfolio 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050505',
+                        surface: '#0d0d0d',
+                        accent: '#818cf8',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+
+        #mouse-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(129, 140, 248, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        .glass {
+            background: rgba(13, 13, 13, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tilt-container {
+            perspective: 1000px;
+        }
+        .tilt-card {
+            transition: transform 0.2s ease-out;
+            transform-style: preserve-3d;
+        }
+        .tilt-card img {
+            transform: translateZ(80px); 
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 8px; height: 1em;
+            background-color: #818cf8;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { from, to { opacity: 1; } 50% { opacity: 0; } }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+    </style>
+</head>
+<body class="bg-dark text-gray-300 font-sans selection:bg-accent selection:text-white overflow-x-hidden">
+
+    <div id="mouse-glow"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tighter text-white font-mono">
+                <span class="text-accent">&lt;</span>ERICK<span class="text-accent"> /&gt;</span>
+            </div>
+            <div class="hidden md:flex space-x-10 text-xs font-bold uppercase tracking-widest">
+                <a href="#home" class="hover:text-accent transition-colors">Início</a>
+                <a href="#about" class="hover:text-accent transition-colors">Sobre</a>
+                <a href="#projects" class="hover:text-accent transition-colors">Projetos</a>
+                <a href="#contact" class="hover:text-accent transition-colors">Contato</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative z-10 min-h-screen flex items-center justify-center pt-20 px-6">
+        <div class="max-w-3xl w-full text-center">
+            
+            <div class="tilt-container relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-10 reveal">
+                <div id="tilt-photo" class="tilt-card relative w-full h-full rounded-full border-2 border-white/10 overflow-hidden p-1 bg-surface shadow-2xl cursor-pointer">
+                    <img src="dev.webp" alt="Erick" class="w-full h-full object-cover rounded-full" onerror="this.src='https://ui-avatars.com/api/?name=Erick&background=0d0d0d&color=818cf8&size=256'">
+                </div>
+                <div class="absolute -inset-2 rounded-full border border-accent/20 animate-pulse -z-10"></div>
+            </div>
+
+            <h1 class="text-6xl md:text-9xl font-extrabold text-white mb-6 tracking-tighter reveal" style="transition-delay: 100ms;">ERICK<span class="text-accent">.</span></h1>
+            
+            <div class="max-w-2xl mx-auto text-lg md:text-xl font-mono text-gray-400 mb-10 reveal min-h-[3rem]" style="transition-delay: 200ms;">
+                <span id="typing-target"></span><span class="cursor-blink"></span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 reveal" style="transition-delay: 300ms;">
+                <a href="#projects" class="px-10 py-4 bg-accent text-white font-bold rounded-full hover:shadow-[0_0_25px_rgba(129,140,248,0.4)] transition-all">Ver Projetos</a>
+                <a href="#contact" class="px-10 py-4 border border-white/10 text-white font-bold rounded-full hover:bg-white/5 transition-all">Contato</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="relative z-10 py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-12 gap-12 items-start">
+                <div class="lg:col-span-7 reveal">
+                    <h2 class="text-3xl font-bold text-white mb-8">Sobre mim</h2>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                        Sou estudante de tecnologia apaixonado por criar soluções digitais que unem performance e estética. Meu foco é o desenvolvimento web moderno e automação de processos.
+                    </p>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Acredito que o código é uma ferramenta poderosa para transformar ideias em realidade, sempre priorizando a experiência do usuário.
+                    </p>
+                </div>
+                <div class="lg:col-span-5 reveal" style="transition-delay: 200ms;">
+                    <div class="p-8 rounded-3xl bg-surface/50 border border-white/5 glass">
+                        <h3 class="text-white font-bold mb-6 flex items-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4 text-accent"></i> Tecnologias
+                        </h3>
+                        <div class="flex flex-wrap gap-3">
+                            <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-dark border border-white/5 text-sm font-mono">
+                                <i data-lucide="terminal" class="w-3 h-3 text-accent"></i> Python
+                            </div>
+                            <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-dark border border-white/5 text-sm font-mono">
+                                <i data-lucide="layout" class="w-3 h-3 text-accent"></i> Tailwind
+                            </div>
+                            <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-dark border border-white/5 text-sm font-mono">
+                                <i data-lucide="code" class="w-3 h-3 text-accent"></i> JavaScript
+                            </div>
+                            <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-dark border border-white/5 text-sm font-mono">
+                                <i data-lucide="git-branch" class="w-3 h-3 text-accent"></i> Git
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="relative z-10 py-24 px-6 bg-surface/10">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-16 reveal">
+                <h2 class="text-3xl font-bold text-white mb-4">Projetos Selecionados</h2>
+                <p class="text-gray-500">Desenvolvimento de interfaces de alto impacto e responsividade.</p>
+            </div>
+
+            <div class="relative overflow-hidden rounded-3xl border border-white/5 glass shadow-2xl reveal">
+                <div id="carouselTrack" class="carousel-track">
+                    <div class="min-w-full">
+                        <div class="flex flex-col">
+                            <div class="w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+                                <img src="img/1.png" alt="Yees Açaí" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200'">
+                            </div>
+                            <div class="p-8 md:p-12">
+                                <span class="text-accent font-mono text-xs mb-3 block uppercase tracking-widest flex items-center gap-2">
+                                    <i data-lucide="monitor" class="w-3 h-3"></i> Landing Page
+                                </span>
+                                <h3 class="text-3xl font-bold text-white mb-4 uppercase">Yees Açaí</h3>
+                                <p class="text-gray-400 text-lg leading-relaxed mb-6">Landing page moderna e otimizada para conversão, com integração de WhatsApp e design fluido.</p>
+                                <div class="flex gap-6 mt-4">
+                                    <a href="https://github.com/erickmth" target="_blank">
+                                        <i data-lucide="github" class="w-5 h-5 text-gray-500 hover:text-white cursor-pointer transition-colors"></i>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-gray-500 hover:text-white cursor-pointer transition-colors"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="min-w-full">
+                        <div class="flex flex-col">
+                            <div class="w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+                                <img src="img/2.png" alt="JVF Detail" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200'">
+                            </div>
+                            <div class="p-8 md:p-12">
+                                <span class="text-accent font-mono text-xs mb-3 block uppercase tracking-widest flex items-center gap-2">
+                                    <i data-lucide="shield-check" class="w-3 h-3"></i> Premium Design
+                                </span>
+                                <h3 class="text-3xl font-bold text-white mb-4 uppercase">JVF Garagem Detail</h3>
+                                <p class="text-gray-400 text-lg leading-relaxed mb-6">Estética automotiva premium com animações luxuosas e layout responsivo de alta qualidade.</p>
+                                <div class="flex gap-6 mt-4">
+                                    <a href="https://github.com/erickmth" target="_blank">
+                                        <i data-lucide="github" class="w-5 h-5 text-gray-500 hover:text-white cursor-pointer transition-colors"></i>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-gray-500 hover:text-white cursor-pointer transition-colors"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="prevBtn" class="absolute left-4 top-[30%] md:top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full glass border border-white/10 text-white z-20 hover:bg-accent/20 transition-all">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button id="nextBtn" class="absolute right-4 top-[30%] md:top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full glass border border-white/10 text-white z-20 hover:bg-accent/20 transition-all">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="relative z-10 py-32 px-6 text-center">
+        <div class="max-w-4xl mx-auto reveal">
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">Vamos criar algo novo?</h2>
+            <a href="mailto:erickleguisamon@gmail.com" target="_blank" class="text-xl md:text-3xl font-medium text-gray-400 hover:text-accent transition-all duration-300 flex items-center justify-center gap-3 mb-12">
+                <i data-lucide="mail" class="w-6 h-6 md:w-8 md:h-8"></i> erickleguisamon@gmail.com
+            </a>
+            
+            <div class="flex justify-center gap-8 mt-16">
+                <a href="https://github.com/erickmth" target="_blank" class="p-4 rounded-full glass border border-white/5 text-gray-400 hover:text-white hover:border-accent transition-all">
+                    <i data-lucide="github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/erickleguisamon/" target="_blank" class="p-4 rounded-full glass border border-white/5 text-gray-400 hover:text-white hover:border-accent transition-all">
+                    <i data-lucide="linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative z-10 py-12 border-t border-white/5 text-center text-gray-600 text-[10px] font-mono uppercase tracking-[0.3em]">
+        &copy; <span id="year"></span> ERICK — TODOS OS DIREITOS RESERVADOS
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const glow = document.getElementById('mouse-glow');
+        let mX = 0, mY = 0, gX = 0, gY = 0;
+        window.addEventListener('mousemove', (e) => { mX = e.clientX; mY = e.clientY; });
+        function animateGlow() {
+            gX += (mX - gX) * 0.08;
+            gY += (mY - gY) * 0.08;
+            glow.style.transform = `translate(calc(${gX}px - 50%), calc(${gY}px - 50%))`;
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        const tiltPhoto = document.getElementById('tilt-photo');
+        tiltPhoto.addEventListener('mousemove', (e) => {
+            const rect = tiltPhoto.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 5;
+            const rotateY = (centerX - x) / 5;
+            tiltPhoto.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        tiltPhoto.addEventListener('mouseleave', () => {
+            tiltPhoto.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        });
+
+        const phrases = ["Estudante de tecnologia e programação.", "Focado em experiências digitais.", "Transformando criatividade em código."];
+        const target = document.getElementById('typing-target');
+        let pIdx = 0, cIdx = 0, deleting = false;
+
+        function type() {
+            const curr = phrases[pIdx];
+            target.textContent = deleting ? curr.substring(0, cIdx - 1) : curr.substring(0, cIdx + 1);
+            cIdx = deleting ? cIdx - 1 : cIdx + 1;
+            let s = deleting ? 40 : 80;
+            if (!deleting && cIdx === curr.length) { s = 2500; deleting = true; }
+            else if (deleting && cIdx === 0) { deleting = false; pIdx = (pIdx + 1) % phrases.length; s = 500; }
+            setTimeout(type, s);
+        }
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.s = Math.random() * 1.5;
+                this.vx = (Math.random() - 0.5) * 0.25;
+                this.vy = (Math.random() - 0.5) * 0.25;
+            }
+            up() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            dr() {
+                ctx.fillStyle = 'rgba(129, 140, 248, 0.1)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        for(let i=0; i<70; i++) pts.push(new Particle());
+        function anim() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            pts.forEach(p => { p.up(); p.dr(); });
+            requestAnimationFrame(anim);
+        }
+        anim();
+
+        const track = document.getElementById('carouselTrack');
+        let current = 0;
+        document.getElementById('nextBtn').addEventListener('click', () => { current = (current + 1) % 2; track.style.transform = `translateX(-${current * 100}%)`; });
+        document.getElementById('prevBtn').addEventListener('click', () => { current = (current - 1 + 2) % 2; track.style.transform = `translateX(-${current * 100}%)`; });
+
+        const obs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('active')), {threshold:0.1});
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+        window.onload = type;
+    </script>
+</body>
+</html>
